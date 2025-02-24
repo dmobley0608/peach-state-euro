@@ -4,7 +4,7 @@
 
 :root {
   --background: #5c3106;
-  --foreground: #171717;
+  --foreground: #995700;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -19,7 +19,12 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
-
+#id {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -64,6 +69,20 @@ body {
   }
 }
 
+@keyframes loadingBar {
+  0% {
+    transform: translateX(-100%);
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+}
+
 .animate-fadeIn {
   animation: fadeIn 0.8s ease-out forwards;
   animation-fill-mode: forwards;
@@ -79,4 +98,9 @@ body {
 
 .animate-slideFromBottom {
   animation: slideFromBottom 0.8s ease-out forwards;
+}
+
+.animate-loading-bar {
+  animation: loadingBar 1s ease-out infinite;
+  will-change: transform;
 }

@@ -2,15 +2,17 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
-import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/clerk-react';
+import { SignInButton, UserButton, SignedIn, SignedOut} from '@clerk/clerk-react';
+import { useNavigation } from '@/providers/NavigationProvider';
+import { set } from 'sanity';
 
 const Header = () => {
     const [prevScrollPos, setPrevScrollPos] = useState(0);
     const [visible, setVisible] = useState(true);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const menuRef = useRef(null);
-    const { isSignedIn } = useUser();
     const pathname = usePathname();
+    const {setIsNavigating} = useNavigation();
 
     // Close mobile menu when pathname changes
     useEffect(() => {
@@ -43,8 +45,17 @@ const Header = () => {
         };
     }, [prevScrollPos, isMobileMenuOpen]);
 
+    document.querySelectorAll('a').forEach((a) => {
+        a.addEventListener('click', (e) => {
+            if (a.href.startsWith(window.location.origin)) {
+                setIsNavigating(true);
+            }
+        });
+    });
+
     // Hide header on homepage
     if (pathname === '/') return null;
+
 
     return (
         <header
@@ -89,18 +100,12 @@ const Header = () => {
                     </div>
 
                     {/* Auth Buttons */}
-                    <div className="flex items-center space-x-4">
-                        {!isSignedIn ? (
-                            <>
-                                <SignInButton mode="modal" className="text-white">
-
-                                </SignInButton>
-
-                            </>
-                        ) : (
-                            <UserButton />
-                        )}
-                    </div>
+                    <SignedOut>
+                        <SignInButton />
+                    </SignedOut>
+                    <SignedIn>
+                        <UserButton />
+                    </SignedIn>
 
                     {/* Mobile Menu Button */}
                     <button

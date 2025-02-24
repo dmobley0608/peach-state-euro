@@ -2,11 +2,14 @@ import {
   ClerkProvider
 } from '@clerk/nextjs'
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { NavigationProvider } from '@/providers/NavigationProvider';
+
 import '@/styles/components.css'
 import { SanityLive } from '@/sanity/lib/live';
 import Header from '@/components/layout/Header';
 import Announcement from '@/components/layout/Announcement';
+import LoadingBar from '@/components/layout/LoadingBar';
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,12 +33,16 @@ export default function RootLayout({ children }) {
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased `}
         >
-          <Announcement />
-          <Header />
-          <main className="">
-            {children}
-          </main>
-          <SanityLive />
+          <NavigationProvider>
+            <LoadingBar />
+            <Announcement />
+            <Header />
+
+            <main className="">
+              {children}
+            </main>
+            <SanityLive />
+          </NavigationProvider>
         </body>
       </html>
     </ClerkProvider>
