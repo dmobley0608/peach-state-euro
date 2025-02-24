@@ -81,7 +81,7 @@ const Header = () => {
                     </Link>
 
                     {/* Navigation Links - Desktop */}
-                    <div className="hidden md:flex items-center space-x-6">
+                    <div className="hidden md:flex items-center w-[80%] space-x-6 py-2 relative">
                         <Link
                             href="/services"
                             className="text-white hover:text-gray-200 transition-colors"
@@ -100,15 +100,24 @@ const Header = () => {
                         >
                             Trophy Room
                         </Link>
+                        <div className='absolute right-0'>
+                            <SignedOut>
+
+                                <SignInButton className='bg-orange-500 text-white md:bg-transparent hover:bg-orange-500 md:text-orange-500 font-semibold hover:text-white py-2 px-4 border border-orange-500 hover:border-transparent rounded'>
+                                    <button className=''>Sign In/Register</button>
+                                </SignInButton>
+
+
+                            </SignedOut>
+                            <SignedIn>
+                                <UserButton />
+                            </SignedIn>
+                        </div>
+
                     </div>
 
                     {/* Auth Buttons */}
-                    <SignedOut>
-                        <SignInButton />
-                    </SignedOut>
-                    <SignedIn>
-                        <UserButton />
-                    </SignedIn>
+
 
                     {/* Mobile Menu Button */}
                     <button
@@ -132,7 +141,7 @@ const Header = () => {
                 {/* Mobile Menu with height transition */}
                 <div
                     className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out
-                        ${isMobileMenuOpen ? 'h-[156px] opacity-100' : 'h-0 opacity-0'}`}
+                        ${isMobileMenuOpen ? 'h-[200px] opacity-100' : 'h-0 opacity-0'}`}
                 >
                     <div className="px-2 py-3 space-y-1">
                         <Link
@@ -156,6 +165,17 @@ const Header = () => {
                         >
                             Trophy Room
                         </Link>
+                        <SignedOut>
+
+                            <SignInButton className='bg-orange-500 text-white md:bg-transparent hover:bg-orange-500 md:text-orange-500 font-semibold hover:text-white py-2 px-4 border border-orange-500 hover:border-transparent rounded'>
+                                <button className=''>Sign In/Register</button>
+                            </SignInButton>
+
+
+                        </SignedOut>
+                        <SignedIn>
+                            <UserButton />
+                        </SignedIn>
                     </div>
                 </div>
             </nav>

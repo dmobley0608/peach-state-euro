@@ -6,6 +6,7 @@ import Loading from './loading';
 import { supabase } from '@/lib/supabase';
 import { TrophyProvider } from '@/contexts/TrophyContext';
 import CategoryNav from '@/components/trophy-room/CategoryNav';
+import AnnouncementBarTrophyRoom from '@/components/trophy-room/AnnouncementBarTrophyRoom';
 
 async function getAllTrophies() {
     const { data } = await supabase
@@ -21,7 +22,8 @@ export default async function TrophyRoomPage({ searchParams }) {
     const initialCategory = sp.category || 'hunting';
 
     return (
-        <div className="container mx-auto px-4 py-12">
+        <div className="container mx-auto px-4 pb-12">
+            <AnnouncementBarTrophyRoom />
             <h1 className="text-4xl font-bold text-white text-center mb-8">Trophy Room</h1>
 
             <TrophyProvider
@@ -37,7 +39,6 @@ export default async function TrophyRoomPage({ searchParams }) {
                 <div className="my-8 text-center">
                     <UploadButton />
                 </div>
-
                 <Suspense fallback={<Loading />}>
                     <TrophyGallery />
                 </Suspense>
