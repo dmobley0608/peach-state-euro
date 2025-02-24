@@ -1,5 +1,5 @@
 'use client'
-import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 const NavigationContext = createContext({
@@ -19,11 +19,14 @@ export function NavigationProvider({ children }) {
         setIsNavigating(true);
         const timeout = setTimeout(() => setIsNavigating(false), 500);
         return () => clearTimeout(timeout);
-    }, [pathname, searchParams, previousPathname.current]); 
+    }, [pathname, searchParams, previousPathname.current]);
 
     return (
-        <NavigationContext.Provider value={{ isNavigating, setIsNavigating }}>
-            {children}
-        </NavigationContext.Provider>
+        <Suspense>
+            <NavigationContext.Provider value={{ isNavigating, setIsNavigating }}>
+                {children}
+            </NavigationContext.Provider>
+        </Suspense>
+
     );
 }

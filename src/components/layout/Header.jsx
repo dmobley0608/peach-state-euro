@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from "next/link";
 import { usePathname } from 'next/navigation';
-import { SignInButton, UserButton, SignedIn, SignedOut} from '@clerk/clerk-react';
+import { SignInButton, UserButton, SignedIn, SignedOut } from '@clerk/clerk-react';
 import { useNavigation } from '@/providers/NavigationProvider';
 import { set } from 'sanity';
 
@@ -12,7 +12,7 @@ const Header = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const menuRef = useRef(null);
     const pathname = usePathname();
-    const {setIsNavigating} = useNavigation();
+    const { setIsNavigating } = useNavigation();
 
     // Close mobile menu when pathname changes
     useEffect(() => {
@@ -20,11 +20,11 @@ const Header = () => {
     }, [pathname]);
 
     useEffect(() => {
+        // Handle scroll and click outside logic
         const handleScroll = () => {
             const currentScrollPos = window.pageYOffset;
             setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
             setPrevScrollPos(currentScrollPos);
-            // Close mobile menu on scroll
             if (isMobileMenuOpen) setIsMobileMenuOpen(false);
         };
 
@@ -34,28 +34,31 @@ const Header = () => {
             }
         };
 
+        // Add navigation click handler
+        const handleNavigationClick = (e) => {
+            const link = e.target.closest('a');
+            if (link?.href?.startsWith(window.location.origin)) {
+                setIsNavigating(true);
+            }
+        };
+
+        // Add event listeners
         window.addEventListener('scroll', handleScroll);
         document.addEventListener('mousedown', handleClickOutside);
         document.addEventListener('touchstart', handleClickOutside);
+        document.addEventListener('click', handleNavigationClick);
 
+        // Cleanup
         return () => {
             window.removeEventListener('scroll', handleScroll);
             document.removeEventListener('mousedown', handleClickOutside);
             document.removeEventListener('touchstart', handleClickOutside);
+            document.removeEventListener('click', handleNavigationClick);
         };
-    }, [prevScrollPos, isMobileMenuOpen]);
-
-    document.querySelectorAll('a').forEach((a) => {
-        a.addEventListener('click', (e) => {
-            if (a.href.startsWith(window.location.origin)) {
-                setIsNavigating(true);
-            }
-        });
-    });
+    }, [prevScrollPos, isMobileMenuOpen, setIsNavigating]);
 
     // Hide header on homepage
     if (pathname === '/') return null;
-
 
     return (
         <header
