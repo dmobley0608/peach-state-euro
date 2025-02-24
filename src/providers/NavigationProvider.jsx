@@ -1,6 +1,6 @@
 'use client'
-import { createContext, useContext, useState, useEffect, useRef, Suspense } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 
 const NavigationContext = createContext({
     isNavigating: false,
@@ -12,21 +12,32 @@ export const useNavigation = () => useContext(NavigationContext);
 export function NavigationProvider({ children }) {
     const [isNavigating, setIsNavigating] = useState(false);
     const pathname = usePathname();
-    const previousPathname = useRef(pathname);
-    const searchParams = useSearchParams();
+
+    const startNavigation = useCallback(() => {
+        setIsNavigating(true);
+    }, []);
+
+    const endNavigation = useCallback(() => {
+        setIsNavigating(false);
+    }, []);
 
     useEffect(() => {
-        setIsNavigating(true);
-        const timeout = setTimeout(() => setIsNavigating(false), 500);
-        return () => clearTimeout(timeout);
-    }, [pathname, searchParams, previousPathname.current]);
+        if (isNavigating) {
+            const timeout = setTimeout(endNavigation, 1500);
+            return () => clearTimeout(timeout);
+        }
+    }, [isNavigating, endNavigation]);
+
+    useEffect(() => {
+        startNavigation();
+    }, [pathname, startNavigation]);
 
     return (
-        <Suspense>
-            <NavigationContext.Provider value={{ isNavigating, setIsNavigating }}>
-                {children}
-            </NavigationContext.Provider>
-        </Suspense>
-
+        <NavigationContext.Provider value={{
+            isNavigating,
+            setIsNavigating: startNavigation
+        }}>
+            {children}
+        </NavigationContext.Provider>
     );
 }

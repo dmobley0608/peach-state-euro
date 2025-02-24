@@ -3,6 +3,7 @@ import {
 } from '@clerk/nextjs'
 import { Geist, Geist_Mono } from "next/font/google";
 import { NavigationProvider } from '@/providers/NavigationProvider';
+import { Suspense } from 'react';
 
 import '@/styles/components.css'
 import { SanityLive } from '@/sanity/lib/live';
@@ -33,16 +34,18 @@ export default function RootLayout({ children }) {
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased `}
         >
-          <NavigationProvider>
-            <LoadingBar />
-            <Announcement />
-            <Header />
+          <Suspense fallback={<LoadingBar />}>
+            <NavigationProvider>
+              <LoadingBar />
+              <Announcement />
+              <Header />
 
-            <main className="">
-              {children}
-            </main>
-            <SanityLive />
-          </NavigationProvider>
+              <main className="">
+                {children}
+              </main>
+              <SanityLive />
+            </NavigationProvider>
+          </Suspense>
         </body>
       </html>
     </ClerkProvider>
